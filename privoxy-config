@@ -1,0 +1,14 @@
+listen-address  127.0.0.1:8118
+forward-socks5t / 127.0.0.1:9050 .
+
+# Enable advanced features
+debug 1
+hide-user-agent
+hide-referrer
+accept-intercepted-requests 1
+max-client-connections 16
+
+# Custom filters and actions (uncomment or add as needed)
+# actionsfile standard  # Internal purpose
+# actionsfile user.action  # User custom actions
+# filterfile user.filter  # User custom filters

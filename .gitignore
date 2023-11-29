@@ -1,0 +1,14 @@
+# General
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Idea
+.idea
+.vscode

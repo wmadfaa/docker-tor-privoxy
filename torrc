@@ -1,0 +1,14 @@
+SocksPort 127.0.0.1:9050
+ControlPort 127.0.0.1:9051
+HashedControlPassword [YourHashedControlPassword]
+SafeLogging 1
+DisableDebuggerAttachment 0
+CookieAuthentication 1
+
+# Advanced configurations (uncomment as needed)
+# AvoidDiskWrites 1
+# ClientOnly 1
+# EntryNodes [fingerprint]
+# ExitNodes [fingerprint]
+# ExcludeNodes [fingerprint]
+# NumEntryGuards 4
