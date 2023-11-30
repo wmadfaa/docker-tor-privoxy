@@ -1,5 +1,5 @@
 # Use the latest Alpine Linux for a minimal base image
-FROM alpine:latest
+FROM alpine:3.18
 
 # Install Tor, Privoxy, and Socat
 RUN apk --no-cache add tor privoxy socat openrc
@@ -10,7 +10,10 @@ RUN adduser -D -g '' privoxyuser && \
     chown privoxyuser /etc/privoxy && \
     chown toruser /etc/tor
 
-# Set up OpenRC
+# Create Tor data directory and set proper ownership
+RUN mkdir -p /var/lib/tor && chown toruser:toruser /var/lib/tor
+
+## Set up OpenRC
 RUN mkdir /run/openrc && \
     touch /run/openrc/softlevel
 
@@ -22,11 +25,9 @@ COPY privoxy-config /etc/privoxy/config
 RUN rc-update add tor default && \
     rc-update add privoxy default
 
-# Expose Tor SOCKS, Privoxy, and Tor Control ports, binding them to localhost
-EXPOSE 127.0.0.1:9050 127.0.0.1:8118 127.0.0.1:9051
-
-# Use a non-root user to run the services
-USER toruser
+# Expose Tor SOCKS, Privoxy, and Tor Control ports
+EXPOSE 9050/tcp 9051/tcp 8118/tcp
 
 # Start OpenRC which will manage the services
-CMD ["openrc", "boot"]
+#CMD ["openrc", "boot"]
+CMD tor & privoxy --no-daemon /etc/privoxy/config
