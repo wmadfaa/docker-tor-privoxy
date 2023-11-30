@@ -2,7 +2,7 @@
 FROM alpine:3.18
 
 # Install Tor, Privoxy, and Socat
-RUN apk --no-cache add tor privoxy socat openrc
+RUN apk --no-cache add tor privoxy socat
 
 # Avoid running services as root for security reasons
 RUN adduser -D -g '' privoxyuser && \
@@ -21,18 +21,10 @@ RUN mkdir /run/openrc && \
 COPY torrc /etc/tor/torrc
 COPY privoxy-config /etc/privoxy/config
 
-# Configure OpenRC to start Tor and Privoxy
-RUN rc-update add tor default && \
-    rc-update add privoxy default
-
 # Expose Tor SOCKS, Privoxy, and Tor Control ports
 EXPOSE 9050 9051 8118
-
-# Start OpenRC which will manage the services
-#CMD ["openrc", "boot"]
 
 CMD socat TCP-LISTEN:9052,fork TCP:127.0.0.1:9050 & \
     socat TCP-LISTEN:8119,fork TCP:127.0.0.1:8118 & \
     socat TCP-LISTEN:9053,fork TCP:127.0.0.1:9051 & \
-    tor & \
-    privoxy --no-daemon /etc/privoxy/config
+    tor & privoxy --no-daemon /etc/privoxy/config
