@@ -26,8 +26,13 @@ RUN rc-update add tor default && \
     rc-update add privoxy default
 
 # Expose Tor SOCKS, Privoxy, and Tor Control ports
-EXPOSE 9050/tcp 9051/tcp 8118/tcp
+EXPOSE 9050 9051 8118
 
 # Start OpenRC which will manage the services
 #CMD ["openrc", "boot"]
-CMD tor & privoxy --no-daemon /etc/privoxy/config
+
+CMD socat TCP-LISTEN:9052,fork TCP:127.0.0.1:9050 & \
+    socat TCP-LISTEN:8119,fork TCP:127.0.0.1:8118 & \
+    socat TCP-LISTEN:9053,fork TCP:127.0.0.1:9051 & \
+    tor & \
+    privoxy --no-daemon /etc/privoxy/config

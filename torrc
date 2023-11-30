@@ -1,6 +1,6 @@
 User toruser
-SocksPort 0.0.0.0:9050
-ControlPort 9051
+SocksPort 127.0.0.1:9050
+ControlPort 127.0.0.1:9051
 HashedControlPassword 16:BE70EE1CA8E5BEEE605EC5D2FDB51F315110FD3E77DC1860690E84F7CE
 SafeLogging 1
 DisableDebuggerAttachment 0

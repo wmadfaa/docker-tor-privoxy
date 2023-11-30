@@ -1,4 +1,4 @@
-forward-socks5t / 0.0.0.0:9050 .
+forward-socks5t / 127.0.0.1:9050 .
 listen-address 0.0.0.0:8118
 
 # Enable advanced features

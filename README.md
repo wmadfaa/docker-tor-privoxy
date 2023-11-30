@@ -10,23 +10,7 @@ This setup provides a Docker container running Tor and Privoxy on Alpine Linux w
 
 ## Setup Instructions
 
-### Step 1: Build the Docker Image
-
-Navigate to the directory containing your Dockerfile and configuration files (`torrc` and `privoxy-config`). Build the Docker image using the following command:
-
-```bash
-docker build -t tor-privoxy-image .
-```
-
-### Step 2: Run the Docker Container
-
-Run the Docker container with the necessary port mappings:
-
-```bash
-docker run -p 127.0.0.1:9050:9050 -p 127.0.0.1:8118:8118 -p 127.0.0.1:9051:9051 tor-privoxy-image
-```
-
-### Step 3: Generate HashedControlPassword
+### Step 1: Generate HashedControlPassword
 
 To generate a HashedControlPassword for Tor:
 
@@ -37,32 +21,23 @@ To generate a HashedControlPassword for Tor:
 2. Replace `my_password` with your desired password.
 3. Insert the generated hash into the `torrc` configuration file under `HashedControlPassword`.
 
-### Step 4: Configure Tor Control Port
+### Step 2: Build the Docker Image
 
-- Ensure the Tor Control Port is correctly configured in the `torrc` file.
-- By default, the Control Port is set to `9051`. Ensure this port is exposed in the Dockerfile if you plan to access it from outside the container.
-- Use strong authentication (hashed password) for any access to the Control Port.
-
-### Step 5: Configure Firewall Settings
-
-Configure your host machine's firewall to allow traffic only through the necessary ports. For example, using iptables:
+Navigate to the directory containing the Dockerfile and Build the Docker image using the following command:
 
 ```bash
-iptables -A INPUT -p tcp --dport 9050 -j ACCEPT
-iptables -A INPUT -p tcp --dport 8118 -j ACCEPT
-iptables -A INPUT -p tcp --dport 9051 -j ACCEPT # If using the Control Port externally
+docker build -t tor-privoxy-image .
 ```
 
-### Step 6: Network Isolation
+### Step 3: Run the Docker Container
 
-Use Docker's network features for additional isolation:
+Run the Docker container with the necessary port mappings:
 
 ```bash
-docker network create --driver bridge isolated_network
-docker run --network isolated_network tor-privoxy-image
+docker run -p 127.0.0.1:9050:9052 -p 127.0.0.1:8118:8119 -p 127.0.0.1:9051:9053 tor-privoxy-image
 ```
 
-### Step 7: Applying Configuration Changes
+### Step 4: Applying Configuration Changes
 
 If you make changes to the configuration files (`torrc` or `privoxy-config`), restart the Docker container to apply these changes:
 
@@ -70,7 +45,7 @@ If you make changes to the configuration files (`torrc` or `privoxy-config`), re
 docker restart [container_id]
 ```
 
-### Step 8: Starting and Stopping the Container
+### Step 5: Starting and Stopping the Container
 
 To start the Docker container:
 
@@ -106,33 +81,6 @@ axios.get('https://check.torproject.org/api/ip', {
            console.error('Error:', error);
         });
 ```
-
-### Using with a Curl Command
-
-To use the Privoxy proxy with a curl command:
-
-```bash
-curl --proxy http://127.0.0.1:8118 https://check.torproject.org/api/ip
-```
-
-## Monitoring and Logs
-
-Regularly monitor the logs for any unusual activity. Use the following command to view the logs of the Docker container:
-
-```bash
-docker logs [container_id]
-```
-
-## Updates
-
-Keep your Docker image and host system updated with the latest security patches.
-
-## Conclusion
-
-This setup offers a secure environment for routing web traffic through Tor with Privoxy's filtering capabilities. Ensure you stay informed about updates and best practices in network security.
-
-
-## Usage Examples
 
 ### Using with Node.js and Playwright
 
@@ -198,3 +146,27 @@ QUIT
 ```
 
 These commands will allow you to interact directly with the Tor instance running inside your Docker container, giving you insights into its status and control over its operations.
+
+### Using with a Curl Command
+
+To use the Privoxy proxy with a curl command:
+
+```bash
+curl --proxy http://127.0.0.1:8118 https://check.torproject.org/api/ip
+```
+
+## Monitoring and Logs
+
+Regularly monitor the logs for any unusual activity. Use the following command to view the logs of the Docker container:
+
+```bash
+docker logs [container_id]
+```
+
+## Updates
+
+Keep your Docker image and host system updated with the latest security patches.
+
+## Conclusion
+
+This setup offers a secure environment for routing web traffic through Tor with Privoxy's filtering capabilities. Ensure you stay informed about updates and best practices in network security.
